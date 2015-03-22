@@ -1,0 +1,38 @@
+knobs
+
+- number of threads
+- Use GET requests &or HEAD and GET Auto switch
+-
+
+options
+- list based or pure brute force
+- dir to start with (assuming /)
+- file extention to look
+- brute force dirs
+- http + https
+- max request per second
+
+information to be retrieved
+- type (file or dir)
+- endpoint type
+- response (code)
+- path
+- size
+
+cool information to tell
+- requests per second (current and average)
+- number of expected requests
+- expected time to finish
+
+export to 
+.csv
+.xml
+.json
+.txt (tab delimited)
+
+future
+- set cookies to go with it
+- set headers to go with it
+
+- check what headers come back in the response
+- check what cookies come back in the response
