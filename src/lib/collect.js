@@ -3,8 +3,13 @@ var http = require('http');
 var T = require('stream').Transform;
 var request = require('request');
 
+request.defaults({
+    maxSockets: Infinity
+});
+
 module.exports = function(url) {
     return transform(10, collector);
+
 
     function collector(data, callback) {
         var stream = this; 
@@ -16,7 +21,18 @@ module.exports = function(url) {
         options.followRedirect = false;
         
         console.log('options', options); 
-        get(options, push);
+
+        options.hostname = 'www.sapo.pt';
+        options.port = 80;
+        options.agent = false;
+
+        var req = http.request(options, function(res) {
+            console.log('a'); 
+            callback(null, 'batata'); 
+        }); 
+        req.end();
+
+        //get(options, push);
 
 
         function push(error, res, body) {
