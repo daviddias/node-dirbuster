@@ -28,6 +28,7 @@
   "homepage": "https://github.com/diasdavid/dirbuster",
   "dependencies": {
     "generator-ronin": "^0.1.2",
+    "parallel-transform": "^0.2.2",
     "request": "^2.53.0",
     "ronin": "^0.3.10",
     "yo": "^1.4.6"
