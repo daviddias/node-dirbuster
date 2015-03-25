@@ -24,7 +24,7 @@ module.exports = function(url) {
 
         options.hostname = 'www.sapo.pt';
         options.port = 80;
-        options.agent = false;
+        //options.agent = false;
 
         var req = http.request(options, function(res) {
             console.log('a'); 
