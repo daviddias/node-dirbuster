@@ -24,6 +24,7 @@ module.exports = function(url) {
         function push(error, res, body) {
             if (error) {
                 console.log(error);
+                callback();
             }
             
             callback(null, JSON.stringify({

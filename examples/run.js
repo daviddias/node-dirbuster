@@ -7,7 +7,7 @@ var options = {
         decodeStrings: false,
         objMode: false
     }),
-    url: 'http://www.sapo.pt',
+    url: 'http://www.ieee-ist.org',
     export: 'json'
 };
 
