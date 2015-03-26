@@ -1,6 +1,4 @@
 var transform = require('parallel-transform');
-var http = require('http');
-var T = require('stream').Transform;
 var request = require('request');
 
 request.defaults({
@@ -10,7 +8,6 @@ request.defaults({
 module.exports = function(url) {
     return transform(10, collector);
 
-
     function collector(data, callback) {
         var stream = this; 
         
@@ -19,28 +16,16 @@ module.exports = function(url) {
         options.path = ('/' + data.toString('utf8')).trim();
         options.url = url + options.path;
         options.followRedirect = false;
+        options.pool = false; 
         
-        console.log('options', options); 
 
-        options.hostname = 'www.sapo.pt';
-        options.port = 80;
-        //options.agent = false;
-
-        var req = http.request(options, function(res) {
-            console.log('a'); 
-            callback(null, 'batata'); 
-        }); 
-        req.end();
-
-        //get(options, push);
-
+        get(options, push);
 
         function push(error, res, body) {
-            console.log('baby got back'); 
-            
             if (error) {
                 console.log(error);
             }
+            
             callback(null, JSON.stringify({
                 type: 'file',
                 method: options.method,

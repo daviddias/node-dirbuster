@@ -2,12 +2,13 @@ var dirBuster = require('../src');
 var Writable = require('stream').Writable;
 
 var options = {
-    listPath: '../lists/directory-list-2.3-small.txt',
+    list: '../lists/directory-list-2.3-small.txt',
     outStream: new Writable({
         decodeStrings: false,
         objMode: false
     }),
-    url: 'http://www.sapo.pt'
+    url: 'http://www.sapo.pt',
+    export: 'json'
 };
 
 options.outStream.on('error', function(err) {
