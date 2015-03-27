@@ -1,8 +1,18 @@
+burn down list
+- [ ] opt in on recursive mode
+- [ ] add head as an option
+- [ ] start that CLI 
+- [ ] throttle (n requests at the same time)
+- [ ] select extention (or extentions)
+- [ ] filters (status code, size, type of HEADER) 
+- [ ] inject HEADERS
+- [ ] opt in on getting HEADERS back
+
 knobs
 
 - number of threads
 - Use GET requests &or HEAD and GET Auto switch
--
+
 
 options
 - list based or pure brute force
