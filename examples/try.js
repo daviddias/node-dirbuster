@@ -7,9 +7,10 @@ var options = {
         decodeStrings: false,
         objMode: false
     }),
-    url: 'https://liftsecurity.io',
+    url: 'http://www.ieee-ist.org',
     export: 'json',
-    methods: ['GET','POST']
+    methods: ['GET','POST'],
+    depth: 2
 };
 
 options.outStream.on('error', function(err) {

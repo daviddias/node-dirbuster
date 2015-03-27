@@ -22,19 +22,24 @@ function buster(options) {
     dirPathStream.resume();
 
     function foundDir(path) {
-        console.log('a');
+        
+        //console.log('- ', path);
         var nextDirPathStream = pathStream(options.list);
         var prefixStreamA = directories.prefix(path);
-        // var prefixStreamB = directories.prefix(path);
-        nextDirPathStream.pipe(process.stdout);
-        // nextDirPathStream.pipe(prefixStreamA);
+        var prefixStreamB = directories.prefix(path);
+        // nextDirPathStream.pipe(process.stdout);
+        nextDirPathStream.pipe(prefixStreamA);
+        nextDirPathStream.pipe(prefixStreamB);
 
-        // prefixStreamB.pause();
-        // genStreams.push(prefixStreamB);
+        prefixStreamB.pause();
+        genStreams.push(prefixStreamB);
 
-        //prefixStreamA.pipe(directories.checkDir(options.url, foundDir));
-        // dirPathStream.resume();
+        prefixStreamA.pipe(directories.checkDir(options.url, foundDir));
+        nextDirPathStream.resume();
     }
+
+    // ADD A LISTENER TO THE END EVENT OF THE dirPathStreams and a counter on how many are created, only when all of them end, start the slammer, therefore killing the setTimeout hack
+
 
     // setTimeout is a dirty hack -> have to think about this
     setTimeout(function() {
@@ -94,7 +99,7 @@ function buster(options) {
             s.resume();
         });
 
-    }, 1000000);
+    }, 5000);
 
 }
 
@@ -108,8 +113,8 @@ function pathStream(list) {
             path.resolve(__dirname, list));
 
         listStream
-            .pipe(generators.liner)
-            .pipe(generators.cleaner)
+            .pipe(generators.liner())
+            .pipe(generators.cleaner())
             .pipe(ps);
     } else {
         // pipe the fuzzer stream to the pause stream

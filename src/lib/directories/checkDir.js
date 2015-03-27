@@ -6,7 +6,7 @@ request.defaults({
 });
 
 module.exports = function(url, attachStream) {
-    return transform(100, checkDir);
+    return transform(10, checkDir);
 
     function checkDir(data, callback) {
         var stream = this; 
@@ -14,7 +14,7 @@ module.exports = function(url, attachStream) {
         /// hack to avoid checking the same stream to infite
         var tmp = data.toString('utf8').trim();
         if (tmp.indexOf('/') === tmp.length -1 ) {
-            // console.log('AVOID CHECKING SAME DIR: ', tmp);
+            //console.log('AVOID CHECKING SAME DIR: ', tmp);
             return callback();
         }
 
@@ -26,12 +26,15 @@ module.exports = function(url, attachStream) {
         options.pool = false; 
         options.method = 'HEAD';
 
+        // console.log('DIR: ', options.path);
+
         request(options, verify);
 
         function verify(error, res, body) {
             if (error) {
-                console.log('ERROR: ', error);
-                callback();
+                // console.log(options.path);
+                // console.log('ERROR: ', error);
+                return callback();
             }
 
             if (res.statusCode !== 404) {

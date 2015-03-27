@@ -1,16 +1,23 @@
 var Transform = require('stream').Transform;
 
-var cleaner = new Transform({objectMode: false});
+module.exports = function(){
 
-cleaner._transform = function (chunk, encoding, done) {
-    var data = chunk.toString();
+    var cleaner = new Transform({objectMode: false});
 
-    if(data.indexOf('#') === -1) {
-        this.push(data); 
-        done(); 
-    } else {
-        done();
-    }
-};
+    cleaner._transform = function (chunk, encoding, done) {
+        var data = chunk.toString();
 
-module.exports = cleaner;
+        if(data.indexOf('#') === -1) {
+            if(data.trim().length < 1 ){
+                return done();
+            }
+            this.push(data); 
+            done();
+        } else {
+            done();
+        }
+    };
+
+    return cleaner;
+
+}

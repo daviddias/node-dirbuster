@@ -5,8 +5,15 @@ module.exports = function(path) {
 
     ts._transform = function (chunk, encoding, done) {
         var data = chunk.toString();
-        this.push('/' + path + data);
-        done();
+
+        if(data.indexOf('/') === -1) {
+            this.push(path + '/' + data);
+            return done();
+        } else {
+            console.log('ignored');
+            process.exit(1);
+            return done(); 
+        }
     };
     
     return ts;
