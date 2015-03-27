@@ -7,7 +7,7 @@ var options = {
         decodeStrings: false,
         objMode: false
     }),
-    url: 'http://localhost:8080',
+    url: 'https://liftsecurity.io',
     export: 'json',
     methods: ['GET','POST']
 };

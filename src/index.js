@@ -6,76 +6,115 @@ var exporters = require('./lib/exporters');
 var stream = require('stream');
 var combinedStream = require('combined-stream');
 var Funil = require('funil');
+var directories = require('./lib/directories');
 
 module.exports = buster;
 
 function buster(options) {
 
+    var genStreams = [];
+
+    /// Check dirs recursively
+
+    var dirPathStream = pathStream(options.list);
+    var checkDirStream = directories.checkDir(options.url, foundDir);
+    dirPathStream.pipe(checkDirStream);
+    dirPathStream.resume();
+
+    function foundDir(path) {
+        console.log('a');
+        var nextDirPathStream = pathStream(options.list);
+        var prefixStreamA = directories.prefix(path);
+        // var prefixStreamB = directories.prefix(path);
+        nextDirPathStream.pipe(prefixStreamA);
+
+        // prefixStreamB.pause();
+        // genStreams.push(prefixStreamB);
+
+        //prefixStreamA.pipe(directories.checkDir(options.url, foundDir));
+        // dirPathStream.resume();
+    }
+
+    // setTimeout is a dirty hack -> have to think about this
+    setTimeout(function() {
+
+        var mainPathStream = pathStream(options.list);
+        genStreams.push(mainPathStream);
+
+        /// attach the collectors
+
+        var collectorsFunil = new Funil();
+
+        options.methods.forEach(function(method) {
+            switch (method) {
+                case 'GET':
+                    var collectorGet = collectors.get(options.url);
+                    genStreams.forEach(function(genStream) {
+                        genStream.pipe(collectorGet);
+                    });
+                    collectorsFunil.add(collectorGet);
+                    break;
+                case 'POST':
+                    var collectorPost = collectors.post(options.url);
+                    genStreams.forEach(function(genStream) {
+                        genStream.pipe(collectorPost);
+                    });
+                    collectorsFunil.add(collectorPost);
+                    break;
+                case 'PUT':
+                    break;
+                case 'DELETE':
+                    break;
+
+            }
+        });
+
+        /// pick here the right exportStream
+
+        var exportStream;
+
+        switch (options.export) {
+            case 'txt':
+                break;
+            case 'xml':
+                break;
+            case 'csv':
+                break;
+            default:
+                exportStream = exporters.toJSON;
+                break;
+        }
+
+        collectorsFunil
+            .pipe(exportStream)
+            .pipe(options.outStream);
+
+        genStreams.forEach(function(s) {
+            s.resume();
+        });
+
+    }, 1000000);
+
+}
+
+function pathStream(list) {
     var ps = new stream.Transform({objectMode: true});
     ps._transform = function(data, enc, callback) {callback(null, data);};
-
     ps.pause();
 
-    if (options.list) {
+    if (list) {
         var listStream = fs.createReadStream(
-            path.resolve(__dirname, options.list));
+            path.resolve(__dirname, list));
 
         listStream
             .pipe(generators.liner)
             .pipe(generators.cleaner)
             .pipe(ps);
-
     } else {
         // pipe the fuzzer stream to the pause stream
     }
 
-    /// recursive
-
-    /// filter here with HEAD
-
-    var f = new Funil();
-
-    options.methods.forEach(function(method) {
-        switch (method) {
-            case 'GET':
-                var collectorGet = collectors.get(options.url);
-                ps.pipe(collectorGet);
-                f.add(collectorGet);
-                break;
-            case 'POST':
-                var collectorPost = collectors.post(options.url);
-                ps.pipe(collectorPost);
-                f.add(collectorPost);
-                break;
-            case 'PUT':
-                break;
-            case 'DELETE':
-                break;
-
-        }
-    });
-
-    /// pick here the right exportStream
-
-    var exportStream;
-
-    switch (options.export) {
-        case 'txt':
-            break;
-        case 'xml':
-            break;
-        case 'csv':
-            break;
-        default:
-            exportStream = exporters.toJSON;
-            break;
-    }
-
-    f
-        .pipe(exportStream)
-        .pipe(options.outStream);
-
-    ps.resume();
+    return ps;
 }
 
 /* options
