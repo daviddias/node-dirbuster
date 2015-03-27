@@ -4,6 +4,8 @@ var collectors = require('./lib/collectors');
 var generators = require('./lib/generators');
 var exporters = require('./lib/exporters');
 var stream = require('stream');
+var combinedStream = require('combined-stream');
+var Funil = require('funil');
 
 module.exports = buster;
 
@@ -27,6 +29,34 @@ function buster(options) {
         // pipe the fuzzer stream to the pause stream
     }
 
+    /// recursive
+
+    /// filter here with HEAD
+
+    var f = new Funil();
+
+    options.methods.forEach(function(method) {
+        switch (method) {
+            case 'GET':
+                var collectorGet = collectors.get(options.url);
+                ps.pipe(collectorGet);
+                f.add(collectorGet);
+                break;
+            case 'POST':
+                var collectorPost = collectors.post(options.url);
+                ps.pipe(collectorPost);
+                f.add(collectorPost);
+                break;
+            case 'PUT':
+                break;
+            case 'DELETE':
+                break;
+
+        }
+    });
+
+    /// pick here the right exportStream
+
     var exportStream;
 
     switch (options.export) {
@@ -41,8 +71,7 @@ function buster(options) {
             break;
     }
 
-    ps
-        .pipe(collectors.get(options.url))
+    f
         .pipe(exportStream)
         .pipe(options.outStream);
 

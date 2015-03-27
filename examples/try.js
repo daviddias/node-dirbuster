@@ -7,8 +7,9 @@ var options = {
         decodeStrings: false,
         objMode: false
     }),
-    url: 'http://www.ieee-ist.org',
-    export: 'json'
+    url: 'http://localhost:8080',
+    export: 'json',
+    methods: ['GET','POST']
 };
 
 options.outStream.on('error', function(err) {
@@ -16,8 +17,13 @@ options.outStream.on('error', function(err) {
 });
 
 options.outStream._write = function (chunk, enc, next) {
-    console.log('out', chunk.toString('utf8'));
+    console.log(chunk.toString('utf8'));
     next();
 };
+
+options.outStream.on('end', function() {
+    console.log('ended');
+    process.exit(1);
+});
 
 dirBuster(options);

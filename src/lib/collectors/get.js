@@ -6,7 +6,7 @@ request.defaults({
 });
 
 module.exports = function(url) {
-    return transform(10, collector);
+    return transform(100, collector);
 
     function collector(data, callback) {
         var stream = this; 
@@ -17,13 +17,12 @@ module.exports = function(url) {
         options.url = url + options.path;
         options.followRedirect = false;
         options.pool = false; 
-        
 
         get(options, push);
 
         function push(error, res, body) {
             if (error) {
-                console.log(error);
+                console.log('ERROR: ', error);
                 callback();
             }
             
@@ -38,18 +37,7 @@ module.exports = function(url) {
     }
 };
 
-function head() {}
-
 function get(options, push) {
     options.method = 'GET'; 
     request(options, push);
 }
-
-function dir() { // to check if it is a dir
-}
-function post() {}
-
-function put() {}
-
-function del() {}
-
