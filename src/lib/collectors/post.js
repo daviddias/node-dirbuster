@@ -16,7 +16,7 @@ module.exports = function(url) {
         options.path = ('/' + data.toString('utf8')).trim();
         options.url = url + options.path;
         options.followRedirect = false;
-        options.pool = false; 
+        options.pool = false;
 
         post(options, push);
 
@@ -25,7 +25,7 @@ module.exports = function(url) {
                 // console.log('ERROR', error);
                 return callback();
             }
-            
+
             callback(null, JSON.stringify({
                 type: 'file',
                 method: options.method,
@@ -38,7 +38,6 @@ module.exports = function(url) {
 };
 
 function post(options, push) {
-    options.method = 'POST'; 
+    options.method = 'POST';
     request(options, push);
 }
-

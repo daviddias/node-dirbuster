@@ -16,13 +16,20 @@ function buster(options) {
 
     /// Check dirs recursively
 
+    var counterStarted = 0;
+    var counterEnded = 0;
+
     var dirPathStream = pathStream(options.list);
     var checkDirStream = directories.checkDir(options.url, foundDir);
+    checkDirStream.on('end', finished);
+    //dirPathStream.on('end', finished);
     dirPathStream.pipe(checkDirStream);
     dirPathStream.resume();
 
+    counterStarted++;
+
     function foundDir(path) {
-        
+        counterStarted++;
         //console.log('- ', path);
         var nextDirPathStream = pathStream(options.list);
         var prefixStreamA = directories.prefix(path);
@@ -34,15 +41,23 @@ function buster(options) {
         prefixStreamB.pause();
         genStreams.push(prefixStreamB);
 
-        prefixStreamA.pipe(directories.checkDir(options.url, foundDir));
+        var nextCheckDirStream = directories.checkDir(options.url, foundDir);
+        nextCheckDirStream.on('end', finished);
+        //nextDirPathStream.on('end', finished);
+        prefixStreamA.pipe(nextCheckDirStream);
         nextDirPathStream.resume();
     }
 
-    // ADD A LISTENER TO THE END EVENT OF THE dirPathStreams and a counter on how many are created, only when all of them end, start the slammer, therefore killing the setTimeout hack
+    function finished() {
+        console.log('finished<-');
+        counterEnded++;
 
+        if (counterStarted === counterEnded) {
+            smash();
+        }
+    }
 
-    // setTimeout is a dirty hack -> have to think about this
-    setTimeout(function() {
+    function smash() {
 
         var mainPathStream = pathStream(options.list);
         genStreams.push(mainPathStream);
@@ -50,11 +65,15 @@ function buster(options) {
         /// attach the collectors
 
         var collectorsFunil = new Funil();
+        collectorsFunil.setMaxListeners(0);
+
+        console.log('GEN STREAMS:', genStreams.length);
 
         options.methods.forEach(function(method) {
             switch (method) {
                 case 'GET':
                     var collectorGet = collectors.get(options.url);
+                    collectorGet.setMaxListeners(0);
                     genStreams.forEach(function(genStream) {
                         genStream.pipe(collectorGet);
                     });
@@ -62,6 +81,7 @@ function buster(options) {
                     break;
                 case 'POST':
                     var collectorPost = collectors.post(options.url);
+                    collectorPost.setMaxListeners(0);
                     genStreams.forEach(function(genStream) {
                         genStream.pipe(collectorPost);
                     });
@@ -91,7 +111,10 @@ function buster(options) {
                 break;
         }
 
+        exportStream.setMaxListeners(0);
+
         collectorsFunil
+            //.pipe(process.stdout);
             .pipe(exportStream)
             .pipe(options.outStream);
 
@@ -99,7 +122,7 @@ function buster(options) {
             s.resume();
         });
 
-    }, 5000);
+    }
 
 }
 

@@ -2,12 +2,12 @@ var dirBuster = require('../src');
 var Writable = require('stream').Writable;
 
 var options = {
-    list: '../lists/directory-list-2.3-small.txt',
+    list: '../lists/test.txt',
     outStream: new Writable({
         decodeStrings: false,
         objMode: false
     }),
-    url: 'http://www.ieee-ist.org',
+    url: 'https://liftsecurity.io',
     export: 'json',
     methods: ['GET','POST'],
     depth: 2

@@ -6,14 +6,14 @@ request.defaults({
 });
 
 module.exports = function(url, attachStream) {
-    return transform(10, checkDir);
+    return transform(50, checkDir);
 
     function checkDir(data, callback) {
-        var stream = this; 
+        var stream = this;
 
         /// hack to avoid checking the same stream to infite
         var tmp = data.toString('utf8').trim();
-        if (tmp.indexOf('/') === tmp.length -1 ) {
+        if (tmp.indexOf('/') === tmp.length - 1) {
             //console.log('AVOID CHECKING SAME DIR: ', tmp);
             return callback();
         }
@@ -23,7 +23,7 @@ module.exports = function(url, attachStream) {
         options.path = ('/' + data.toString('utf8')).trim() + '/';
         options.url = url + options.path;
         options.followRedirect = false;
-        options.pool = false; 
+        options.pool = false;
         options.method = 'HEAD';
 
         // console.log('DIR: ', options.path);

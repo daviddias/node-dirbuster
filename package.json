@@ -7,7 +7,7 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "codestyle": "./node_modules/.bin/jscs src/*.js tests/*.js",
+    "codestyle": "./node_modules/.bin/jscs src tests",
     "lint": "./node_modules/.bin/jshint .",
     "test": "node ./node_modules/.bin/lab -r tap tests/*-test.js | ./node_modules/.bin/tap-spec",
     "test-cov": "node ./node_modules/.bin/lab -t 100 tests/*-test.js"
