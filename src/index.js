@@ -26,7 +26,8 @@ function buster(options) {
         var nextDirPathStream = pathStream(options.list);
         var prefixStreamA = directories.prefix(path);
         // var prefixStreamB = directories.prefix(path);
-        nextDirPathStream.pipe(prefixStreamA);
+        nextDirPathStream.pipe(process.stdout);
+        // nextDirPathStream.pipe(prefixStreamA);
 
         // prefixStreamB.pause();
         // genStreams.push(prefixStreamB);
