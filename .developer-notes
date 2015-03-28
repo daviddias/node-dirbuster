@@ -1,9 +1,14 @@
 burn down list
-- [ ] opt in on recursive mode
-- [ ] add head as an option
+- [X] add HEAD as an option
+- [X] add PUT as an option 
+- [X] add DELETE as an option
+- [X] throttle (n requests at the same time)
+- [X] select extention
+- [ ] write docs (0.1.X)
+- [ ] write tests (0.2.X)
+
 - [ ] start that CLI 
-- [ ] throttle (n requests at the same time)
-- [ ] select extention (or extentions)
+- [ ] opt in on recursive mode
 - [ ] filters (status code, size, type of HEADER) 
 - [ ] inject HEADERS
 - [ ] opt in on getting HEADERS back

@@ -5,15 +5,15 @@ request.defaults({
     maxSockets: Infinity
 });
 
-module.exports = function(url) {
-    return transform(100, collector);
+module.exports = function(url, throttle, extension) {
+    return transform(throttle || 10, collector);
 
     function collector(data, callback) {
         var stream = this;
 
         var options = {};
         options.headers = {};
-        options.path = ('/' + data.toString('utf8')).trim();
+        options.path = ('/' + data.toString('utf8')).trim() + extension;
         options.url = url + options.path;
         options.followRedirect = false;
         options.pool = false;

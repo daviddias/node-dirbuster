@@ -12,7 +12,17 @@ node-dirbuster
 
 ### Programmaticaly (through requiring the module)
 
+Using disbuster programatically is as simple as it can get
 
+```
+var dirBuster = require('dirbuster');
+
+var options = {
+    
+};
+
+dirBuster(options);
+```
 
 
 ## Overview (copied from the OWASP DirBuster Project)
