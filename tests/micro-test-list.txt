@@ -1,7 +1,4 @@
 # ignore the comments 
 
 index
-images
-web
-library
-js
+

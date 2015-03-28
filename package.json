@@ -9,8 +9,8 @@
   "scripts": {
     "codestyle": "./node_modules/.bin/jscs src tests",
     "lint": "./node_modules/.bin/jshint .",
-    "test": "node ./node_modules/.bin/lab -r tap tests/*-test.js | ./node_modules/.bin/tap-spec",
-    "test-cov": "node ./node_modules/.bin/lab -t 100 tests/*-test.js"
+    "test": "node ./node_modules/.bin/lab -r tap tests/test.js | ./node_modules/.bin/tap-spec",
+    "test-cov": "node ./node_modules/.bin/lab -t 100 tests/test.js"
   },
   "pre-commit": [
     "codestyle",
@@ -40,6 +40,7 @@
     "jshint": "^2.6.3",
     "lab": "^5.5.0",
     "nock": "^1.2.0",
-    "precommit-hook": "^2.0.1"
+    "precommit-hook": "^2.0.1",
+    "tap-spec": "^2.2.2"
   }
 }

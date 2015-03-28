@@ -13,12 +13,14 @@ module.exports = function(url, throttle, extension) {
 
         var options = {};
         options.headers = {};
-        options.path = ('/' + data.toString('utf8')).trim() + extension;
+        options.path = ('/' + data.toString('utf8')).trim() +
+            (extension || '');
         options.url = url + options.path;
         options.followRedirect = false;
         options.pool = false;
+        options.method = 'GET';
 
-        get(options, push);
+        request(options, push);
 
         function push(error, res, body) {
             if (error) {
@@ -36,8 +38,3 @@ module.exports = function(url, throttle, extension) {
         }
     }
 };
-
-function get(options, push) {
-    options.method = 'GET';
-    request(options, push);
-}

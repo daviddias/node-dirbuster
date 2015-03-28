@@ -13,7 +13,8 @@ module.exports = function(url, throttle, extension) {
 
         var options = {};
         options.headers = {};
-        options.path = ('/' + data.toString('utf8')).trim() + extension;
+        options.path = ('/' + data.toString('utf8')).trim() +
+            (extension || '');
         options.url = url + options.path;
         options.followRedirect = false;
         options.pool = false;
