@@ -1,0 +1,22 @@
+# ignore the comments 
+
+index
+images
+download
+2006
+news
+crack
+serial
+warez
+full
+12
+contact
+submit
+www
+s
+web
+library
+wiki
+advertise
+spam
+js

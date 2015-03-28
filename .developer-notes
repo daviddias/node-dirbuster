@@ -4,7 +4,7 @@ burn down list
 - [X] add DELETE as an option
 - [X] throttle (n requests at the same time)
 - [X] select extention
-- [ ] write docs (0.1.X)
+- [X] write docs (0.1.X)
 - [ ] write tests (0.2.X)
 
 - [ ] start that CLI 
