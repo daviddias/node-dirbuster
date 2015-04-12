@@ -24,7 +24,7 @@ options.outStream._write = function (chunk, enc, next) {
     next();
 };
 
-options.outStream.on('end', function() {
+options.outStream.on('finish', function() {
     console.log('ended');
     process.exit(1);
 });
