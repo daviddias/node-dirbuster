@@ -2,6 +2,7 @@ var Lab = require('lab');
 var Code = require('code');
 var lab = exports.lab = Lab.script();
 var nock = require('nock');
+var Writable = require('stream').Writable;
 
 var experiment = lab.experiment;
 var test = lab.test;
@@ -21,14 +22,14 @@ experiment(': ', function() {
         done();
     });
 
-/*
-    test HEAD
-    test GET
-    test POST
-    test PUT
-    test DELETE
-    test extension
-    test throttle
+    /*
+        test HEAD
+        test GET
+        test POST
+        test PUT
+        test DELETE
+        test extension
+        test throttle
 */
     var url = 'http://test.url';
 
@@ -37,21 +38,46 @@ experiment(': ', function() {
     });
 
     test('GET collector', {timeout: 10000}, function(done) {
-        var scope = nock(url)
+        var out = new Writable({
+            decodeStrings: false,
+            objMode: false
+        });
+
+        var results = [];
+
+        setNocks();
+
+        var options = {
+            list: './tests/test-list.txt',
+            outStream: out,
+            url: url,
+            methods: ['GET']
+        };
+
+        out._write = function(chunk, enc, next) {
+            results.push(chunk.toString('utf8'));
+            next();
+        };
+
+        out.on('finish', function() {
+            done();
+        });
+
+        dirBuster(options);
+    });
+
+    function setNocks() {
+        nock(url)
             .get('/index')
             .reply(200, 'Hello World!', {
                 'X-My-Headers': 'My Header value'
             });
 
-        var options = {
-            list: './tests/micro-test-list.txt',
-            outStream: process.stderr,
-            url: url,
-            methods: ['GET']
-        };
-        setTimeout(done, 2000);
-
-        dirBuster(options);
-    });
+        nock(url)
+            .get('/js')
+            .reply(403, 'Hello World!', {
+                'X-My-Headers': 'My Header value'
+            });
+    }
 
 });
