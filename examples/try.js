@@ -2,7 +2,7 @@ var dirBuster = require('../src');
 var Writable = require('stream').Writable;
 
 var options = {
-    list: '../lists/test.txt',
+    list: './simple-test.txt',
     outStream: new Writable({
         decodeStrings: false,
         objMode: false
