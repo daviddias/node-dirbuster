@@ -3,7 +3,8 @@ var fs = require('fs');
 var path = require('path');
 var generators = require('../generators');
 
-function pathStream(list) {
+function createListStream(list) {
+    console.log('bim') 
     var ps = new stream.Transform({objectMode: true});
     ps._transform = function(data, enc, callback) {callback(null, data);};
     ps.pause();
@@ -23,4 +24,4 @@ function pathStream(list) {
     return ps;
 }
 
-module.exports = pathStream;
+module.exports = createListStream;

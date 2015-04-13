@@ -9,8 +9,8 @@ var options = {
     }),
     url: 'https://liftsecurity.io',
     export: 'json',
-    methods: ['GET','POST','HEAD','PUT','DELETE'],
-    depth: 2,
+    methods: ['GET'],
+    //depth: 2,
     throttle: 5,
     extension: ['.php']
 };
