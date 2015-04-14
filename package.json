@@ -1,6 +1,6 @@
 {
   "name": "dirbuster",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "dirbuster implementation in Node.js with some extrasauce",
   "bin": {
     "dirbuster": "bin/cli.js"
@@ -14,7 +14,7 @@
     "test-cov": "node ./node_modules/.bin/lab -t 100 tests/test.js"
   },
   "pre-commit": [
-    "codestyle-fix", 
+    "codestyle-fix",
     "lint"
   ],
   "repository": {
