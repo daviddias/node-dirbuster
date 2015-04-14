@@ -39,10 +39,14 @@ experiment(': ', function() {
     });
 
     test('GET collector', {timeout: 10000}, function(done) {
-        var results = [];
+        var results = {};
 
         var out = createOutStream(results, function() {
-            // test results
+            expect(results['/index']).to.equal(200);
+            expect(results['/images']).to.equal(404);
+            expect(results['/download']).to.equal(404);
+            expect(results['/js']).to.equal(200);
+            expect(results['/news']).to.equal(200);
             done();
         });
 
@@ -63,9 +67,10 @@ experiment(': ', function() {
             decodeStrings: false,
             objMode: false
         });
-        
+
         out._write = function(chunk, enc, next) {
-            results.push(chunk.toString('utf8'));
+            var result = JSON.parse(chunk.toString('utf8'));
+            results[result.path] = result.statusCode;
             next();
         };
 
@@ -98,7 +103,7 @@ experiment(': ', function() {
         nock(url)
             .get('/js')
             .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
-        
+
         nock(url)
             .get('/news')
             .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
@@ -109,11 +114,11 @@ experiment(': ', function() {
     }
 
     function setPUTNocks() {
-    
+
     }
 
     function setDELETENocks() {
-    
+
     }
 
     function setGETAndExtensionNocks() {
@@ -132,14 +137,14 @@ experiment(': ', function() {
         nock(url)
             .get('/js.php')
             .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
-        
+
         nock(url)
             .get('/news.php')
             .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
     }
 
     function setDIRNocks() {
-   
+
     }
 
 });

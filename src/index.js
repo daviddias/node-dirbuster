@@ -26,30 +26,30 @@ function buster(options) {
     };
 
     var listStream = generators.createListStream(options.list);
-    listStream.pipe(pathStream, {end: false}); 
+    listStream.pipe(pathStream, {end: false});
     listStream.on('end', function() {
-        state.main = true; 
+        state.main = true;
         if (!state.checkDir) {
             pathStream.end();
-        } 
-    }); 
+        }
+    });
 
     listStream.resume();
-    
-    /// check for dirs 
+
+    /// check for dirs
 
     if (options.depth) {
         var anotherListStream = generators.createListStream(options.list);
         var checkDirStream = createCheckDirStream(options.url, foundDir);
-        checkDirStream.setMaxListeners(0); 
+        checkDirStream.setMaxListeners(0);
         anotherListStream.pipe(checkDirStream, {end: false});
         anotherListStream.resume();
-    
+
         checkDirStream.on('drain', function() {
             //console.log('\ndrain event\n');
             if (state.main && state.prefix === 0) {
                 //console.log('killing pathStream');
-                pathStream.end(); 
+                pathStream.end();
             }
             //1. check if main is done
             //2. check if there are still prefixes going
@@ -65,12 +65,12 @@ function buster(options) {
         //4. list pipe to prefix stream
         //5. prefix pipe to checkDirStream with end: false
         //6. increment the prefix counter
-       
+
         var yetAnotherListStream = generators.createListStream(options.list);
         var prefixStream = createPrefixStream(dirPath);
         state.prefix += 1;
         prefixStream.on('end', function() {
-            state.prefix -= 1; 
+            state.prefix -= 1;
         });
         yetAnotherListStream.pipe(prefixStream);
         prefixStream.pipe(checkDirStream, {end: false});
@@ -149,7 +149,7 @@ function buster(options) {
     collectorsFunil
         .pipe(exportStream)
         .pipe(options.outStream);
-    
+
     pathStream.resume();
 }
 
@@ -159,16 +159,4 @@ function createPathStream() {
     ps.pause();
 
     return ps;
-}
-
-function createPrefixStream(prefix, listPath) {
-    var ls = createListStream(listPath);
-
-    var ps = new stream.Transform({objectMode: true});
-    ps._transform = function(data, enc, callback) {
-        callback(null, data);
-    };
-    
-    ls.pipe(ps);  
-    return ps; 
 }
