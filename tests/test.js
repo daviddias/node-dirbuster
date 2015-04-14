@@ -29,8 +29,9 @@ experiment(': ', function() {
         test PUT
         test DELETE
         test extension
-        test throttle
-*/
+        test recursiveness
+    */
+
     var url = 'http://test.url';
 
     test('cool test', function(done) {
@@ -38,14 +39,14 @@ experiment(': ', function() {
     });
 
     test('GET collector', {timeout: 10000}, function(done) {
-        var out = new Writable({
-            decodeStrings: false,
-            objMode: false
-        });
-
         var results = [];
 
-        setNocks();
+        var out = createOutStream(results, function() {
+            // test results
+            done();
+        });
+
+        setGETNocks();
 
         var options = {
             list: './tests/test-list.txt',
@@ -54,30 +55,95 @@ experiment(': ', function() {
             methods: ['GET']
         };
 
+        dirBuster(options);
+    });
+
+    function createOutStream(results, cb) {
+        var out = new Writable({
+            decodeStrings: false,
+            objMode: false
+        });
+        
         out._write = function(chunk, enc, next) {
             results.push(chunk.toString('utf8'));
             next();
         };
 
-        out.on('finish', function() {
-            done();
-        });
+        out.on('finish', cb);
 
-        dirBuster(options);
-    });
+        return out;
+    }
 
-    function setNocks() {
+    /* Routes
+        index
+        images
+        download
+        js
+        news
+    */
+
+    function setGETNocks() {
         nock(url)
             .get('/index')
-            .reply(200, 'Hello World!', {
-                'X-My-Headers': 'My Header value'
-            });
+            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+
+        nock(url)
+            .get('/images')
+            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+
+        nock(url)
+            .get('/download')
+            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
 
         nock(url)
             .get('/js')
-            .reply(403, 'Hello World!', {
-                'X-My-Headers': 'My Header value'
-            });
+            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+        
+        nock(url)
+            .get('/news')
+            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
     }
+
+    function setPOSTNocks() {
+
+    }
+
+    function setPUTNocks() {
+    
+    }
+
+    function setDELETENocks() {
+    
+    }
+
+    function setGETAndExtensionNocks() {
+        nock(url)
+            .get('/index.php')
+            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+
+        nock(url)
+            .get('/images.php')
+            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+
+        nock(url)
+            .get('/download.php')
+            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+
+        nock(url)
+            .get('/js.php')
+            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+        
+        nock(url)
+            .get('/news.php')
+            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+    }
+
+
+
+
+    function setDIRNocks() {
+   
+    }
+
 
 });

@@ -29,27 +29,36 @@ function buster(options) {
     listStream.pipe(pathStream, {end: false}); 
     listStream.on('end', function() {
         state.main = true; 
-        if (state.checkDir) {
-            console.log('\nDO NOT HAPPEN\n'); 
+        if (!state.checkDir) {
             pathStream.end();
         } 
     }); 
-    //pathStream.on('end', function(){
-    //    console.log('PATH STREAM EMMITED END EVENT');
-    //}); 
 
     listStream.resume();
     
     /// check for dirs 
 
-    var anotherListStream = generators.createListStream(options.list);
-    var checkDirStream = createCheckDirStream(options.url, foundDir);
-    checkDirStream.setMaxListeners(0); 
-    anotherListStream.pipe(checkDirStream, {end: false});
-    anotherListStream.resume();
+    if (options.depth) {
+        var anotherListStream = generators.createListStream(options.list);
+        var checkDirStream = createCheckDirStream(options.url, foundDir);
+        checkDirStream.setMaxListeners(0); 
+        anotherListStream.pipe(checkDirStream, {end: false});
+        anotherListStream.resume();
+    
+        checkDirStream.on('drain', function() {
+            //console.log('\ndrain event\n');
+            if (state.main && state.prefix === 0) {
+                //console.log('killing pathStream');
+                pathStream.end(); 
+            }
+            //1. check if main is done
+            //2. check if there are still prefixes going
+            //3. if all go, call end on pathStream
+        });
+    }
 
     function foundDir(dirPath) {
-        console.log('dirPath: ', dirPath);
+        //console.log('dirPath: ', dirPath);
         //1. create a new list stream
         //2. create new prefix stream
         //3. prefix.on end to remove one from the counter
@@ -60,7 +69,7 @@ function buster(options) {
         var yetAnotherListStream = generators.createListStream(options.list);
         var prefixStream = createPrefixStream(dirPath);
         state.prefix += 1;
-        prefixStream.on('end', function() {
+        prefixStream.on('end', function(){
             state.prefix -= 1; 
         });
         yetAnotherListStream.pipe(prefixStream);
@@ -68,17 +77,6 @@ function buster(options) {
         prefixStream.pipe(pathStream, {end: false});
         yetAnotherListStream.resume();
     }
-
-    checkDirStream.on('drain', function() {
-        console.log('\ndrain event\n');
-        if (state.main && state.prefix === 0) {
-            console.log('killing pathStream');
-            pathStream.end(); 
-        }
-        //1. check if main is done
-        //2. check if there are still prefixes going
-        //3. if all go, call end on pathStream
-    });
 
     /// attach the collectors
 
@@ -155,6 +153,7 @@ function buster(options) {
     pathStream.resume();
 }
 
+
 function createPathStream() {
     var ps = new stream.Transform({objectMode: true});
     ps._transform = function(data, enc, callback) {callback(null, data);};
@@ -174,15 +173,3 @@ function createPrefixStream(prefix, listPath) {
     ls.pipe(ps);  
     return ps; 
 }
-/*
-function createCheckDirStream(dirFound) {
-    var cds = new stream.Transform({objectMode: true});
-    cds._transform = function(data, enc, callback) {
-        callback(null, data);
-    
-    
-    };
-    
-    return cds;
-}
-*/

@@ -10,7 +10,7 @@ var options = {
     url: 'https://liftsecurity.io',
     export: 'json',
     methods: ['GET'],
-    //depth: 2,
+    depth: 2,
     throttle: 5,
     extension: ['.php']
 };
