@@ -138,12 +138,8 @@ experiment(': ', function() {
             .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
     }
 
-
-
-
     function setDIRNocks() {
    
     }
-
 
 });

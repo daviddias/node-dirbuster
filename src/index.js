@@ -69,7 +69,7 @@ function buster(options) {
         var yetAnotherListStream = generators.createListStream(options.list);
         var prefixStream = createPrefixStream(dirPath);
         state.prefix += 1;
-        prefixStream.on('end', function(){
+        prefixStream.on('end', function() {
             state.prefix -= 1; 
         });
         yetAnotherListStream.pipe(prefixStream);
@@ -152,7 +152,6 @@ function buster(options) {
     
     pathStream.resume();
 }
-
 
 function createPathStream() {
     var ps = new stream.Transform({objectMode: true});
