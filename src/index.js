@@ -141,7 +141,7 @@ function buster(options) {
         case 'txt': break;
         case 'xml': break;
         case 'csv': break;
-        default: exportStream = exporters.toJSON; break;
+        default: exportStream = exporters.createToJSON(); break;
     }
 
     exportStream.setMaxListeners(0);

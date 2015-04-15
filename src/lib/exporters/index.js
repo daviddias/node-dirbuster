@@ -1,4 +1,4 @@
-exports.toCSV = require('./toCSV');
-exports.toJSON = require('./toJSON');
-exports.toTXT = require('./toTXT');
-exports.toXML = require('./toXML');
+exports.createToCSV = require('./toCSV');
+exports.createToJSON = require('./toJSON');
+exports.createToTXT = require('./toTXT');
+exports.createToXML = require('./toXML');

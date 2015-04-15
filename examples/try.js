@@ -9,10 +9,10 @@ var options = {
     }),
     url: 'https://liftsecurity.io',
     export: 'json',
-    methods: ['GET'],
+    methods: ['GET', 'POST'],
     depth: 2,
-    throttle: 5,
-    extension: ['.php']
+    throttle: 5
+    //extension: ['.php']
 };
 
 options.outStream.on('error', function(err) {
