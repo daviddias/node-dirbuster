@@ -7,8 +7,10 @@ burn down list
 - [X] write docs (0.1.X)
 - [ ] write tests (0.2.X)
 
-- [ ] start that CLI 
-- [ ] opt in on recursive mode
+- [X] start that CLI 
+- [X] opt in on recursive mode:
+- [ ] depth level for recursive mode
+- [ ] other exporters
 - [ ] filters (status code, size, type of HEADER) 
 - [ ] inject HEADERS
 - [ ] opt in on getting HEADERS back

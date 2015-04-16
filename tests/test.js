@@ -146,7 +146,7 @@ experiment(': ', function() {
 
         dirBuster(options);
     });
-    /*
+
         test('Recursive DIR check', {timeout: 10000}, function(done) {
             var results = {};
 
@@ -177,7 +177,7 @@ experiment(': ', function() {
 
             dirBuster(options);
         });
-*/
+
 
     function createOutStream(results, cb) {
         var out = new Writable({

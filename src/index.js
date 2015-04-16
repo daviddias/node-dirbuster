@@ -45,6 +45,7 @@ function buster(options) {
         checkDirStream.setMaxListeners(0);
 
         checkDirStream.on('drain', function() {
+            console.log('DRAIN');
             if (state.main && state.prefix === 0) {
                 pathStream.end();
             }
