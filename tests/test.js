@@ -17,8 +17,6 @@ experiment(': ', function() {
     var scope;
     var url = 'http://test.url';
 
-
-
     before(function(done) {
         scope = nock(url);
         done();
@@ -124,7 +122,6 @@ experiment(': ', function() {
         dirBuster(options);
     });
 
-
     test('GET with extension collector', function(done) {
         var results = {};
 
@@ -149,43 +146,43 @@ experiment(': ', function() {
 
         dirBuster(options);
     });
+    /*
+        test('Recursive DIR check', {timeout: 10000}, function(done) {
+            var results = {};
 
+            var out = createOutStream(results, function() {
+                expect(results['/index']).to.equal(200);
+                expect(results['/images']).to.equal(404);
+                expect(results['/download']).to.equal(404);
+                expect(results['/js']).to.equal(200);
+                expect(results['/news']).to.equal(200);
+                expect(results['/images/index']).to.equal(200);
+                expect(results['/images/images']).to.equal(404);
+                expect(results['/images/download']).to.equal(404);
+                expect(results['/images/js']).to.equal(200);
+                expect(results['/images/news']).to.equal(200);
 
-     test('GET collector with recursiveness', {timeout: 100000}, function(done) {
-        var results = {};
+                done();
+            });
 
-        var out = createOutStream(results, function() {
-            expect(results['/index']).to.equal(200);
-            expect(results['/images']).to.equal(404);
-            expect(results['/download']).to.equal(404);
-            expect(results['/js']).to.equal(200);
-            expect(results['/news']).to.equal(200);
-            expect(results['/images/index']).to.equal(200);
-            expect(results['/images/images']).to.equal(404);
-            expect(results['/images/download']).to.equal(404);
-            expect(results['/images/js']).to.equal(200);
-            expect(results['/images/news']).to.equal(200);
+            setDIRNocks();
 
-            done();
+            var options = {
+                list: './tests/test-list.txt',
+                outStream: out,
+                url: url,
+                methods: ['GET'],
+                depth: 1
+            };
+
+            dirBuster(options);
         });
-
-        setDIRNocks();
-
-        var options = {
-            list: './tests/test-list.txt',
-            outStream: out,
-            url: url,
-            methods: ['GET'],
-            depth: 1
-        };
-
-        dirBuster(options);
-    });
+*/
 
     function createOutStream(results, cb) {
         var out = new Writable({
             decodeStrings: false,
-            objMode: false
+            objMode: true
         });
 
         out._write = function(chunk, enc, next) {
@@ -202,178 +199,196 @@ experiment(': ', function() {
     function setGETNocks() {
         scope
             .get('/index')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .get('/images')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .get('/download')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .get('/js')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .get('/news')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
     }
 
     function setPOSTNocks() {
         scope
             .post('/index')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .post('/images')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .post('/download')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .post('/js')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .post('/news')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
     }
 
     function setPUTNocks() {
         scope
             .put('/index')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .put('/images')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .put('/download')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .put('/js')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .put('/news')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
     }
 
     function setDELETENocks() {
         scope
             .delete('/index')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .delete('/images')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .delete('/download')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .delete('/js')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .delete('/news')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
     }
 
     function setGETAndExtensionNocks() {
         scope
             .get('/index.php')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .get('/images.php')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .get('/download.php')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .get('/js.php')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .get('/news.php')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
     }
 
     function setDIRNocks() {
         scope
             .get('/index')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .get('/images')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .get('/download')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .get('/js')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .get('/news')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
-            .get('/index/')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .head('/index/')
+            .reply(404);
 
         scope
-            .get('/images/')
-            .reply(403, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .head('/images/')
+            .reply(403);
 
         scope
-            .get('/download/')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .head('/download/')
+            .reply(404);
 
         scope
-            .get('/js/')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .head('/js/')
+            .reply(404);
 
         scope
-            .get('/news/')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
-
+            .head('/news/')
+            .reply(404);
 
         scope
             .get('/images/index')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .get('/images/images')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .get('/images/download')
-            .reply(404, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(404);
 
         scope
             .get('/images/js')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
         scope
             .get('/images/news')
-            .reply(200, 'Hello World!', {'X-My-Headers': 'My Header value'});
+            .reply(200);
 
+        scope
+            .head('/images/index/')
+            .reply(404);
+
+        scope
+            .head('/images/images/')
+            .reply(404);
+
+        scope
+            .head('/images/download/')
+            .reply(404);
+
+        scope
+            .head('/images/js/')
+            .reply(404);
+
+        scope
+            .head('/images/news/')
+            .reply(404);
 
     }
 

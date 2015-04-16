@@ -5,7 +5,7 @@ request.defaults({
     maxSockets: Infinity
 });
 
-module.exports = function(url, throttle, extension) {
+module.exports = function(url, method, throttle, extension) {
     return transform(throttle || 10, collector);
 
     function collector(data, callback) {
@@ -18,14 +18,14 @@ module.exports = function(url, throttle, extension) {
         options.url = url + options.path;
         options.followRedirect = false;
         options.pool = false;
+        options.method = method;
 
-        options.method = 'HEAD';
         request(options, push);
 
         function push(error, res, body) {
             if (error) {
                 // console.log('ERROR: ', error);
-                return callback();
+                return callback(error);
             }
 
             callback(null, JSON.stringify({

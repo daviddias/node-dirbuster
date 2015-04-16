@@ -1,24 +1,25 @@
 var fs = require('fs');
-var collectors = require('./lib/collectors');
-var generators = require('./lib/generators');
-var createCheckDirStream = require('./lib/directories/checkDir');
-var createPrefixStream = require('./lib/directories/prefix');
-var exporters = require('./lib/exporters');
 var stream = require('stream');
 var combinedStream = require('combined-stream');
 var Funil = require('funil');
-var directories = require('./lib/directories');
 var path = require('path');
+
+var createCollectorStream = require('./lib/collector-stream');
+var createPathStream = require('./lib/path-stream');
+var generators = require('./lib/gen-streams');
+var dirStreams = require('./lib/dir-streams');
+var createCheckDirStream = dirStreams.testDir;
+var createPrefixStream = dirStreams.prefixer;
+var exportStreams = require('./lib/export-streams');
 
 module.exports = buster;
 
 function buster(options) {
 
     var pathStream = createPathStream();
-    pathStream.setMaxListeners(0);
-    pathStream.pause();
 
     /// attach simple path stream
+
     var state = {
         main: false,
         prefix: 0,
@@ -42,29 +43,18 @@ function buster(options) {
         var anotherListStream = generators.createListStream(options.list);
         var checkDirStream = createCheckDirStream(options.url, foundDir);
         checkDirStream.setMaxListeners(0);
-        anotherListStream.pipe(checkDirStream, {end: false});
-        anotherListStream.resume();
 
         checkDirStream.on('drain', function() {
-            //console.log('\ndrain event\n');
             if (state.main && state.prefix === 0) {
-                //console.log('killing pathStream');
                 pathStream.end();
             }
-            //1. check if main is done
-            //2. check if there are still prefixes going
-            //3. if all go, call end on pathStream
         });
+
+        anotherListStream.pipe(checkDirStream, {end: false});
+        anotherListStream.resume();
     }
 
     function foundDir(dirPath) {
-        //console.log('dirPath: ', dirPath);
-        //1. create a new list stream
-        //2. create new prefix stream
-        //3. prefix.on end to remove one from the counter
-        //4. list pipe to prefix stream
-        //5. prefix pipe to checkDirStream with end: false
-        //6. increment the prefix counter
 
         var yetAnotherListStream = generators.createListStream(options.list);
         var prefixStream = createPrefixStream(dirPath);
@@ -72,9 +62,11 @@ function buster(options) {
         prefixStream.on('end', function() {
             state.prefix -= 1;
         });
+
         yetAnotherListStream.pipe(prefixStream);
         prefixStream.pipe(checkDirStream, {end: false});
         prefixStream.pipe(pathStream, {end: false});
+
         yetAnotherListStream.resume();
     }
 
@@ -90,48 +82,21 @@ function buster(options) {
 
     options.methods.forEach(function(method) {
         switch (method) {
-            case 'HEAD':
-                var collectorHead = collectors.head(options.url,
-                        tfactor,
-                        options.extension);
-                collectorHead.setMaxListeners(0);
-                pathStream.pipe(collectorHead);
-                collectorsFunil.add(collectorHead);
-                break;
-            case 'GET':
-                var collectorGet = collectors.get(options.url,
-                        tfactor,
-                        options.extension);
-                collectorGet.setMaxListeners(0);
-                pathStream.pipe(collectorGet);
-                collectorsFunil.add(collectorGet);
-                break;
-            case 'POST':
-                var collectorPost = collectors.post(options.url,
-                        tfactor,
-                        options.extension);
-                collectorPost.setMaxListeners(0);
-                pathStream.pipe(collectorPost);
-                collectorsFunil.add(collectorPost);
-                break;
-            case 'PUT':
-                var collectorPut = collectors.put(options.url,
-                        tfactor,
-                        options.extension);
-                collectorPut.setMaxListeners(0);
-                pathStream.pipe(collectorPut);
-                collectorsFunil.add(collectorPut);
-                break;
-            case 'DELETE':
-                var collectorDel = collectors.del(options.url,
-                        tfactor,
-                        options.extension);
-                collectorDel.setMaxListeners(0);
-                pathStream.pipe(collectorDel);
-                collectorsFunil.add(collectorDel);
-                break;
+            case 'HEAD': attachCollector('HEAD'); break;
+            case 'GET': attachCollector('GET'); break;
+            case 'POST': attachCollector('POST'); break;
+            case 'PUT': attachCollector('PUT'); break;
+            case 'DELETE': attachCollector('DELETE'); break;
         }
     });
+
+    function attachCollector(method) {
+        var collectorDel = createCollectorStream(options.url,
+                method, tfactor, options.extension);
+        collectorDel.setMaxListeners(0);
+        pathStream.pipe(collectorDel);
+        collectorsFunil.add(collectorDel);
+    }
 
     /// pick here the right exportStream
 
@@ -141,22 +106,12 @@ function buster(options) {
         case 'txt': break;
         case 'xml': break;
         case 'csv': break;
-        default: exportStream = exporters.createToJSON(); break;
+        default: exportStream = exportStreams.createToJSON(); break;
     }
-
-    exportStream.setMaxListeners(0);
 
     collectorsFunil
         .pipe(exportStream)
         .pipe(options.outStream);
 
     pathStream.resume();
-}
-
-function createPathStream() {
-    var ps = new stream.Transform({objectMode: true});
-    ps._transform = function(data, enc, callback) {callback(null, data);};
-    ps.pause();
-
-    return ps;
 }

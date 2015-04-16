@@ -1,7 +1,7 @@
 var stream = require('stream');
 var fs = require('fs');
 var path = require('path');
-var generators = require('../generators');
+var genStreams = require('../gen-streams');
 
 function createListStream(list) {
     var ps = new stream.Transform({objectMode: true});
@@ -13,8 +13,8 @@ function createListStream(list) {
             path.resolve(process.cwd(), list));
 
         listStream
-            .pipe(generators.liner())
-            .pipe(generators.cleaner())
+            .pipe(genStreams.liner())
+            .pipe(genStreams.cleaner())
             .pipe(ps);
     } else {
         // pipe the fuzzer stream to the pause stream
