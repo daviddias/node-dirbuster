@@ -1,6 +1,6 @@
 {
   "name": "dirbuster",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "dirbuster implementation in Node.js with some extrasauce",
   "bin": {
     "dirbuster": "bin/cli.js"
