@@ -147,37 +147,37 @@ experiment(': ', function() {
         dirBuster(options);
     });
 
-    test('Recursive DIR check', {timeout: 10000}, function(done) {
-            var results = {};
+    test('Recursive DIR check', function(done) {
+        var results = {};
 
-            var out = createOutStream(results, function() {
-                expect(results['/index']).to.equal(200);
-                expect(results['/images']).to.equal(404);
-                expect(results['/download']).to.equal(404);
-                expect(results['/js']).to.equal(200);
-                expect(results['/news']).to.equal(200);
+        var out = createOutStream(results, function() {
+            expect(results['/index']).to.equal(200);
+            expect(results['/images']).to.equal(404);
+            expect(results['/download']).to.equal(404);
+            expect(results['/js']).to.equal(200);
+            expect(results['/news']).to.equal(200);
 
-                expect(results['/images/index']).to.equal(200);
-                expect(results['/images/images']).to.equal(404);
-                expect(results['/images/download']).to.equal(404);
-                expect(results['/images/js']).to.equal(200);
-                expect(results['/images/news']).to.equal(200);
+            expect(results['/images/index']).to.equal(200);
+            expect(results['/images/images']).to.equal(404);
+            expect(results['/images/download']).to.equal(404);
+            expect(results['/images/js']).to.equal(200);
+            expect(results['/images/news']).to.equal(200);
 
-                done();
-            });
-
-            setDIRNocks();
-
-            var options = {
-                list: './tests/test-list.txt',
-                outStream: out,
-                url: url,
-                methods: ['GET'],
-                depth: 1
-            };
-
-            dirBuster(options);
+            done();
         });
+
+        setDIRNocks();
+
+        var options = {
+            list: './tests/test-list.txt',
+            outStream: out,
+            url: url,
+            methods: ['GET'],
+            depth: 1
+        };
+
+        dirBuster(options);
+    });
 
     function createOutStream(results, cb) {
         var out = new Writable({
