@@ -6,7 +6,8 @@ request.defaults({
 });
 
 function testDir(url, foundDir) {
-    return transform(1, checkDir);
+    var t = transform(1, {highWaterMark: 1}, checkDir);
+    return t;
 
     function checkDir(data, callback) {
 
@@ -36,7 +37,6 @@ function testDir(url, foundDir) {
             if (res.statusCode !== 404) {
                 foundDir(path);
             }
-
             callback();
         }
     }

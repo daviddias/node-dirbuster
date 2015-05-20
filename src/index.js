@@ -44,11 +44,12 @@ function buster(options) {
         var checkDirStream = createCheckDirStream(options.url, foundDir);
         checkDirStream.setMaxListeners(0);
 
-        checkDirStream.on('drain', function() {
-            console.log('DRAIN');
-            if (state.main && state.prefix === 0) {
-                pathStream.end();
-            }
+        anotherListStream.on('end', function() {
+            checkDirStream.on('drain', function() {
+                if (state.main && state.prefix === 0) {
+                    pathStream.end();
+                }
+            });
         });
 
         anotherListStream.pipe(checkDirStream, {end: false});
@@ -56,7 +57,6 @@ function buster(options) {
     }
 
     function foundDir(dirPath) {
-
         var yetAnotherListStream = generators.createListStream(options.list);
         var prefixStream = createPrefixStream(dirPath);
         state.prefix += 1;

@@ -156,6 +156,7 @@ experiment(': ', function() {
                 expect(results['/download']).to.equal(404);
                 expect(results['/js']).to.equal(200);
                 expect(results['/news']).to.equal(200);
+
                 expect(results['/images/index']).to.equal(200);
                 expect(results['/images/images']).to.equal(404);
                 expect(results['/images/download']).to.equal(404);
@@ -186,6 +187,7 @@ experiment(': ', function() {
 
         out._write = function(chunk, enc, next) {
             var result = JSON.parse(chunk.toString('utf8'));
+
             results[result.path] = result.statusCode;
             next();
         };
