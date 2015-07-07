@@ -9,10 +9,11 @@
   "scripts": {
     "codestyle": "./node_modules/.bin/standard --format",
     "test": "node ./node_modules/.bin/lab -r tap tests/test.js | ./node_modules/.bin/tap-spec",
-    "test-cov": "node ./node_modules/.bin/lab -t 100 tests/test.js"
+    "test-cov": "node ./node_modules/.bin/lab -t 90 tests/test.js"
   },
   "pre-commit": [
-    "codestyle"
+    "codestyle",
+    "test"
   ],
   "repository": {
     "type": "git",
