@@ -1,0 +1,9 @@
+               ┌──────────┐  ┌─────────┐
+               │Add dir as│  │Generator│
+            ┌──│a prefix  │◀─│Stream   │◀┐
+            │  └──────────┘  └─────────┘ │
+┌─────────┐ │  ┌─────────┐  if a dir     Λ
+│Generator│ │  │Test for │  is found    ╱ ╲
+│Stream   │─┴─▶│directory│────────────▶▕ + ▏
+└─────────┘    └─────────┘              ╲ ╱
+                                         V

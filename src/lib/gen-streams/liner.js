@@ -1,29 +1,28 @@
-var Transform = require('stream').Transform;
+var Transform = require('stream').Transform
 
-module.exports = function() {
+module.exports = function () {
+  var liner = new Transform({objectMode: true})
 
-    var liner = new Transform({objectMode: true});
+  liner._transform = function (chunk, encoding, done) {
+    var data = chunk.toString()
+    if (this._lastLineData) {
+      data = this._lastLineData + data
+    }
 
-    liner._transform = function(chunk, encoding, done) {
-        var data = chunk.toString();
-        if (this._lastLineData) {
-            data = this._lastLineData + data;
-        }
+    var lines = data.split('\n')
+    this._lastLineData = lines.splice(lines.length - 1, 1)[0]
 
-        var lines = data.split('\n');
-        this._lastLineData = lines.splice(lines.length - 1, 1)[0];
+    lines.forEach(this.push.bind(this))
+    done()
+  }
 
-        lines.forEach(this.push.bind(this));
-        done();
-    };
+  liner._flush = function (done) {
+    if (this._lastLineData) {
+      this.push(this._lastLineData)
+    }
+    this._lastLineData = null
+    done()
+  }
 
-    liner._flush = function(done) {
-        if (this._lastLineData) {
-            this.push(this._lastLineData);
-        }
-        this._lastLineData = null;
-        done();
-    };
-
-    return liner;
-};
+  return liner
+}

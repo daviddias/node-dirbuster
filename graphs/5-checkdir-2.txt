@@ -1,0 +1,13 @@
+
+                                   .on('end')
+                             ┌──────────┐         ┌─────────┐
+                             │Add dir as│         │Generator│
+                          ┌──│a prefix  │◀────────│Stream   │◀───┐
+                          │  └──────────┘         └─────────┘    │
+                          │.pipe({end: false})                   │
+                          │                                      │
+┌─────────┐               │         ┌─────────┐    if a dir      Λ
+│Generator│               │         │Test for │    is found     ╱ ╲
+│Stream   │───────────────┴────────▶│directory│───────────────▶▕ + ▏
+└─────────┘  .pipe({end: false})    └─────────┘                 ╲ ╱
+                                        .on('drain')             V

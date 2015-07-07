@@ -1,2 +1,2 @@
-exports.testDir = require('./test-dir');
-exports.prefixer = require('./prefixer');
+exports.testDir = require('./test-dir')
+exports.prefixer = require('./prefixer')
