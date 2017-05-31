@@ -181,12 +181,11 @@ experiment(': ', function () {
   function createOutStream (results, cb) {
     var out = new Writable({
       decodeStrings: false,
-      objMode: true
+      objectMode: true
     })
 
     out._write = function (chunk, enc, next) {
       var result = JSON.parse(chunk.toString('utf8'))
-
       results[result.path] = result.statusCode
       next()
     }
@@ -238,7 +237,6 @@ experiment(': ', function () {
     scope
       .post('/news')
       .reply(200)
-
   }
 
   function setPUTNocks () {
@@ -261,7 +259,6 @@ experiment(': ', function () {
     scope
       .put('/news')
       .reply(200)
-
   }
 
   function setDELETENocks () {
@@ -284,7 +281,6 @@ experiment(': ', function () {
     scope
       .delete('/news')
       .reply(200)
-
   }
 
   function setGETAndExtensionNocks () {
