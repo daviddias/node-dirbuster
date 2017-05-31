@@ -8,8 +8,11 @@
   "main": "src/index.js",
   "scripts": {
     "codestyle": "./node_modules/.bin/standard --format",
-    "test": "node ./node_modules/.bin/lab -r tap tests/test.js | ./node_modules/.bin/tap-spec",
-    "test-cov": "node ./node_modules/.bin/lab -t 90 tests/test.js"
+    "fixstyle": "./node_modules/.bin/standard --fix",
+    "test": "node ./node_modules/.bin/lab -r tap tests/test.js",
+    "test-cov": "node ./node_modules/.bin/lab -t 90 tests/test.js",
+    "lint": "jshint .",
+    "validate": "npm ls"
   },
   "pre-commit": [
     "codestyle",
@@ -26,19 +29,20 @@
   },
   "homepage": "https://github.com/diasdavid/node-dirbuster",
   "dependencies": {
-    "combined-stream": "0.0.7",
-    "funil": "0.0.0",
-    "parallel-transform": "^0.2.2",
+    "combined-stream": "1.0.5",
+    "funil": "0.0.1",
+    "parallel-transform": "^1.1.0",
     "pause-stream": "0.0.11",
-    "request": "^2.53.0",
-    "ronin": "^0.3.10"
+    "request": "^2.81.0",
+    "ronin": "^0.3.11"
   },
   "devDependencies": {
-    "code": "^1.3.0",
-    "lab": "^5.5.0",
-    "nock": "^1.2.0",
-    "precommit-hook": "^2.0.1",
-    "standard": "^4.5.2",
-    "tap-spec": "^2.2.2"
+    "code": "^4.0.0",
+    "codestyle": "^20.2.1",
+    "lab": "^13.1.0",
+    "nock": "^9.0.13",
+    "precommit-hook": "^3.0.0",
+    "standard": "^10.0.2",
+    "tap-spec": "^4.1.1"
   }
 }

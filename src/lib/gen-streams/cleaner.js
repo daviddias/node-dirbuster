@@ -18,5 +18,4 @@ module.exports = function () {
   }
 
   return cleaner
-
 }
