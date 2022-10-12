@@ -7,6 +7,11 @@ node-dirbuster
 
 [![NPM](https://nodei.co/npm/dirbuster.png?downloads=true&stars=true)](https://nodei.co/npm/dirbuster/)
 
+![GitHub User's stars](https://img.shields.io/github/stars/daviddias?affiliations=OWNER%2CCOLLABORATOR)
+![GitHub Forks](https://img.shields.io/github/forks/daviddias/node-dirbuster?label=Fork)
+![GitHub Watchers](https://img.shields.io/github/watchers/daviddias/node-dirbuster?label=Watch)
+![GitHub Repo Stars](https://img.shields.io/github/stars/daviddias/node-dirbuster?style=social)
+![GitHub Contexts](https://img.shields.io/github/status/contexts/pulls/daviddias/node-dirbuster/1?style=social)
 ![GitHub Issues](https://img.shields.io/github/issues/daviddias/node-dirbuster?style=social)
 
 ## Usage
