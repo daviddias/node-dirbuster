@@ -7,8 +7,7 @@ node-dirbuster
 
 [![NPM](https://nodei.co/npm/dirbuster.png?downloads=true&stars=true)](https://nodei.co/npm/dirbuster/)
 
-![GitHub Issues](https://img.shields.io/github/daviddias/node-dirbuster/issues/?style=social)
-
+![GitHub Issues](https://img.shields.io/github/issues//daviddias/node-dirbuster?style=social)
 
 ## Usage
 
